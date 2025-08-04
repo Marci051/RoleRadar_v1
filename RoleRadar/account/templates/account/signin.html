@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    SignIn
+{% endblock %}
+
+{% block content %}
+
+    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <div class="card shadow-lg" style="width: 400px; border-radius: 15px;">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">Sign In to Your Account</h3>
+                <form class="forms-sample" action="{% url 'signin' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.username.errors }}
+                        <label for="username">{{ form.username.label }}</label>
+                        {{ form.username }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.password.errors }}
+                        <label for="password">{{ form.password.label }}</label>
+                        {{ form.password }}
+                    </div>
+                    <div class="text-center mt-3">
+                        <p>Do you don't have account? <a href="{% url 'signup' %}">Sign up</a></p>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary w-45 m-auto">Submit</button>
+                    </div>
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="{% url 'home' %}">
+                            <button class="btn btn-outline-light w-45 m-auto">Go back to home</button>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

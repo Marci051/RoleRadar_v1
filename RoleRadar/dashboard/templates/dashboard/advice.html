@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Advice
+{% endblock %}
+
+{% block content %}
+    <div class="container-scroller">
+        <!-- partial:partials/_sidebar.html -->
+        {% include 'dashboard/includes/navbar.html' %}
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_navbar.html -->
+            {% include 'dashboard/includes/header.html' %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <!-- Sidebar (Chat List) -->
+                            <div class="alert alert-warning text-dark fw-bold"
+                                 style="font-size: 0.85rem;">
+                                ⚠️ <span style="color: #b30000;">Heads up!</span> This chatbot has no
+                                memory — your messages are <span
+                                    style="color: #cc0000;">not saved</span> and it won't remember what
+                                you said earlier. So if you're continuing a convo, make sure to repeat
+                                anything important. No context = no help 😅
+                            </div>
+                            <div class="col-md-4 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Get career advice</h4>
+
+                                        <div class="bg-dark text-white p-3 rounded mb-3">
+
+                                            <h6 class="text-light mb-2" style="font-weight: bold;">Guide to prompting
+                                                well for career advice:</h6>
+                                            <ul style="font-size: 0.85rem; padding-left: 1.2rem; margin-bottom: 0; line-height: 1.6;">
+                                                <li>
+                                                    <strong>Be Specific:</strong> Clearly state your current situation
+                                                    (role, skills, experience) and your career question or goal.
+                                                </li>
+                                                <li>
+                                                    <strong>Add Key Context:</strong> Include relevant details like your
+                                                    interests, desired industry, or any constraints (e.g., location,
+                                                    time).
+                                                </li>
+                                                <li>
+                                                    <strong>Ask Focused Questions:</strong> The more targeted your
+                                                    query, the more helpful the AI's advice will be.
+                                                </li>
+                                                <li>
+                                                    <strong>Follow Up for Clarity:</strong> If the advice isn't clear or
+                                                    detailed enough, ask for more information.
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Chat Window -->
+                            <form class="col-lg-8" action="{% url 'advice' %}" method="post">
+                                {% csrf_token %}
+                                {% include 'dashboard/includes/chat.html' %}
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                {% include 'dashboard/includes/footer.html' %}
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+
+{% endblock %}
+
+
+
+

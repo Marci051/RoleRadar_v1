@@ -1,0 +1,80 @@
+{% load static %}
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+        {#        <h3>Hi :)</h3>#}
+        <a href="{% url 'home' %}">
+            <img src="{% static 'images/RoleRadar.png' %}" alt="RoleRadar" width="250px">
+        </a>
+    </div>
+    <ul class="nav">
+        <li class="nav-item profile">
+            <div class="profile-desc">
+                <div class="profile-pic">
+                    <div class="profile-name">
+                        <h5 class="mb-0 font-weight-normal">{{ user.username }}</h5>
+                        <span>{{ user.email }}</span>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="nav-item nav-category">
+            <span class="nav-link">Navigation</span>
+        </li>
+        <li class="nav-item menu-items active">
+            <a class="nav-link" href="{% url 'dashboard' %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-view-dashboard"></i>
+              </span>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items active">
+            <a class="nav-link" href="{% url 'key_skills' %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-target-account"></i>
+              </span>
+                <span class="menu-title">Role Radar</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items active">
+            <a class="nav-link" href="{% url 'roadmap' %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-map-marker-path"></i>
+              </span>
+                <span class="menu-title">Roadmap</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items active">
+            <a class="nav-link" href="{% url 'resume' %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-file-account"></i>
+              </span>
+                <span class="menu-title">Resume</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items active">
+            <a class="nav-link" href="{% url 'advice' %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-lightbulb-on"></i>
+              </span>
+                <span class="menu-title">Career Advice</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items active">
+            <a class="nav-link" href="{% url 'resume_summerize' %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-text-short"></i>
+              </span>
+                <span class="menu-title">Resume Summerize</span>
+            </a>
+        </li>
+        <li class="nav-item menu-items active">
+            <a class="nav-link" href="{% url 'logout_confirm' %}">
+              <span class="menu-icon">
+                <i class="mdi mdi-logout"></i>
+              </span>
+                <span class="menu-title">LogOut</span>
+            </a>
+        </li>
+    </ul>
+</nav>

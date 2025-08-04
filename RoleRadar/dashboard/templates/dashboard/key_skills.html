@@ -1,0 +1,300 @@
+{% extends 'layout.html' %}
+{% load markdownify %}
+
+
+{% block title %}
+    Key Skills
+{% endblock %}
+
+{% block content %}
+    <div class="container-scroller">
+        <!-- partial:partials/_sidebar.html -->
+        {% include 'dashboard/includes/navbar.html' %}
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_navbar.html -->
+            {% include 'dashboard/includes/header.html' %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <form method="post" action="{% url 'key_skills' %}" class="bg-dark text-white p-4 rounded"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <h4 class="mb-3">Enter your resume for analyze</h4>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Resume</label>
+                            <textarea class="form-control text-light" name="description" id="description"
+                                      rows="3"
+                                      placeholder="Enter your resume"></textarea>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="resume_file" class="form-label">Or Upload Resume File (PDF, DOCX)</label>
+                            <input type="file" class="form-control text-light" name="resume_file" id="resume_file"
+                                   accept=".pdf,.docx,.doc">
+                            <small class="form-text text-muted">If you upload a file, its content will be used.
+                                Otherwise, the text from the box above will be used.</small>
+                        </div>
+
+                        <input type="hidden" name="skills" id="skillsHiddenInput">
+
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </form>
+                    <br>
+                    {% if results %}
+                        <div class="row">
+                            <div class="container mt-5 col-lg-7">
+                                <div class="card shadow-lg">
+                                    <div class="card-header bg-primary text-white">
+                                        <h4 class="mb-0">Model and Role Table</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-striped table-hover">
+                                            <thead class="thead-dark">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Model Name</th>
+                                                <th scope="col">Role</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for item in results %}
+                                                {% for key, value in item.items %}
+                                                    <tr>
+                                                        <th scope="row">{{ forloop.parentloop.counter }}</th>
+                                                        <td class="text-light">{{ key|capfirst }}</td>
+                                                        <td class="text-light">{{ value }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container mt-5 col-lg-5">
+                                <div class="card bg-dark shadow-lg border-success">
+                                    <div class="card-header bg-success text-white">
+                                        <h4 class="mb-0">Top 3 Most Frequent Roles</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Role</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for item in top_3_items %}
+                                                <tr>
+                                                    <th scope="row">{{ forloop.counter }}</th>
+                                                    <td>
+                                                        <span class="badge badge-success p-2">{{ item }}</span>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            {#                    **********#}
+                            {% if suggestion_analysis and suggestion_resume and suggestion_skills %}
+
+                                <div class="container mt-5 mb-3">
+                                    <h3 class="text-white mb-3">Suggestions and Roadmaps</h3>
+                                    <ul class="nav nav-tabs" id="roadmapTabs" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link active" id="summery-tab" data-toggle="tab"
+                                               href="#summery"
+                                               role="tab" aria-controls="summery" aria-selected="true">Job Title
+                                                Summary</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="analysis-tab" data-toggle="tab"
+                                               href="#analysis"
+                                               role="tab" aria-controls="analysis" aria-selected="false">Resume
+                                                Analysis</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="resume-roadmap-tab" data-toggle="tab"
+                                               href="#resume-roadmap"
+                                               role="tab" aria-controls="resume-roadmap" aria-selected="false">Resume
+                                                Roadmap</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="skill-roadmap-tab" data-toggle="tab"
+                                               href="#skill-roadmap"
+                                               role="tab" aria-controls="skill-roadmap" aria-selected="false">Skill
+                                                Roadmap</a>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content bg-dark p-4 text-white rounded-bottom"
+                                         id="roadmapTabsContent"
+                                         style="border: 1px solid #dee2e6;">
+                                        <div class="tab-pane fade show active" id="summery" role="tabpanel"
+                                             aria-labelledby="summery-tab">
+                                            {{ job_summery_text|markdownify }}
+                                             {% url 'advice' as base_url %}
+                                            <a href="{{ base_url }}?context={{ job_summery_text_only|urlencode }}"
+                                               class="btn btn-primary">Talk More!</a>
+                                        </div>
+                                        <div class="tab-pane fade" id="analysis" role="tabpanel"
+                                             aria-labelledby="analysis-tab">
+                                            {{ suggestion_analysis|markdownify }}
+                                            {% url 'advice' as base_url %}
+                                            <a href="{{ base_url }}?context={{ suggestion_analysis_text|urlencode }}"
+                                               class="btn btn-primary">Talk More!</a>
+                                        </div>
+                                        <div class="tab-pane fade" id="resume-roadmap" role="tabpanel"
+                                             aria-labelledby="resume-roadmap-tab">
+                                            {{ suggestion_resume|markdownify }}
+                                            {% url 'advice' as base_url %}
+                                            <a href="{{ base_url }}?context={{ suggestion_resume_text|urlencode }}"
+                                               class="btn btn-primary">Talk More!</a>
+                                        </div>
+                                        <div class="tab-pane fade" id="skill-roadmap" role="tabpanel"
+                                             aria-labelledby="skill-roadmap-tab">
+                                            {{ suggestion_skills|markdownify }}
+                                            {% url 'advice' as base_url %}
+                                            <a href="{{ base_url }}?context={{ suggestion_skills_text|urlencode }}"
+                                               class="btn btn-primary">Talk More!</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% endif %}
+
+                            {#                    *********#}
+                        </div>
+                    {% endif %}
+                    {% if analysis_results %}
+                        <div class="container my-5">
+                            <h1 class="mb-4 text-center">Analysis for <span class="text-primary">{{ job_title }}</span>
+                            </h1>
+
+                            <div class="row g-4">
+
+                                <div class="container my-5">
+                                    <div class="card shadow-sm">
+                                        <div class="card-body">
+                                            <h4 class="card-title mb-4 text-center text-primary">Summary Statistics</h4>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-hover text-center align-middle text-light">
+                                                    <thead class="table-primary">
+                                                    <tr>
+                                                        <th class="text-light">Metric</th>
+                                                        <th class="text-light">Value</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td><strong>Average Company Size</strong></td>
+                                                        <td>{{ analysis_results.average_company_size }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Average Experience</strong></td>
+                                                        <td>{{ analysis_results.mean_experience }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Average Salary</strong></td>
+                                                        <td>{{ analysis_results.mean_salary }}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="card shadow-sm h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Qualification Distribution</h5>
+                                            <img src="{{ analysis_results.qualification_chart }}"
+                                                 alt="Qualification Chart" class="img-fluid rounded">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <div class="card shadow-sm h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Top Countries</h5>
+                                            <img src="{{ analysis_results.country_chart }}" alt="Country Chart"
+                                                 class="img-fluid rounded">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="card shadow-sm h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Work Type Distribution</h5>
+                                            <img src="{{ analysis_results.worktype_chart }}" alt="Work Type Chart"
+                                                 class="img-fluid rounded">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="card shadow-sm h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Preference Distribution</h5>
+                                            <img src="{{ analysis_results.preference_chart }}" alt="Preference Chart"
+                                                 class="img-fluid rounded">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <div class="card shadow-sm h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Role Distribution</h5>
+                                            <img src="{{ analysis_results.role_chart }}" alt="Role Chart"
+                                                 class="img-fluid rounded">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <script>
+                    function validateResumeForm() {
+                        const text = document.getElementById("description").value.trim();
+                        const file = document.getElementById("resume_file").files.length;
+
+                        if (!text && file === 0) {
+                            alert("Please enter resume text or upload a file.");
+                            return false;
+                        }
+                        return true;
+                    }
+                </script>
+                {% include 'dashboard/includes/footer.html' %}
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+
+{% endblock %}
+
+
+
+

@@ -1,0 +1,72 @@
+{% extends 'layout.html' %}
+{% load markdownify %}
+
+{% block title %}
+    Resume Summerize
+{% endblock %}
+
+{% block content %}
+    <div class="container-scroller">
+        <!-- partial:partials/_sidebar.html -->
+        {% include 'dashboard/includes/navbar.html' %}
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_navbar.html -->
+            {% include 'dashboard/includes/header.html' %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <form method="post" action="{% url 'resume_summerize' %}" class="bg-dark text-white p-4 rounded"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <h4 class="mb-3">Enter your resume for summerize</h4>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Resume</label>
+                            <textarea class="form-control text-light" name="description" id="description"
+                                      rows="3"
+                                      placeholder="Enter your resume"></textarea>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="resume_file" class="form-label">Or Upload Resume File (PDF, DOCX)</label>
+                            <input type="file" class="form-control text-light" name="resume_file" id="resume_file"
+                                   accept=".pdf,.docx,.doc">
+                            <small class="form-text text-muted">If you upload a file, its content will be used.
+                                Otherwise, the text from the box above will be used.</small>
+                        </div>
+
+                        <input type="hidden" name="skills" id="skillsHiddenInput">
+
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </form>
+                    <br>
+                    {% if message %}
+                        <div class="flex-grow overflow-auto mb-3"
+                             style="background-color: #2a2d34; border-radius: 8px; padding: 10px;">
+                            <div class="d-flex flex-column">
+                                <div class="align-self-start bg-primary text-white rounded p-2 mb-2"
+                                     style="max-width: 100%;">
+                                    {{ message|markdownify }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                {% include 'dashboard/includes/footer.html' %}
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+
+{% endblock %}
+
+
+
+

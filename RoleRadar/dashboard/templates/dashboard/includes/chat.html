@@ -1,0 +1,93 @@
+{% load markdownify %}
+
+<div class="col-md-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body d-flex flex-column" style="height: 600px;">
+            <h4 class="card-title">Send your message</h4>
+
+            <!-- Messages Area -->
+            <div class="flex-grow overflow-auto mb-3" id="chatMessages"
+                 style="background-color: #2a2d34; border-radius: 8px; padding: 10px;">
+                <div class="d-flex flex-column" id="chat">
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="d-flex flex-column w-100">
+            <textarea name="text" id="text"
+                      class="form-control bg-dark text-light rounded mb-2"
+                      placeholder="Type a message..."
+                      rows="5"
+                      style="resize: vertical;"
+            >{% if context %}{{ context }} Explain more about the above topic.{% endif %}</textarea>
+                <button id="btn" class="btn btn-primary align-self-end">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const sendButton = document.getElementById('btn');
+    const textArea = document.getElementById('text');
+    const chatMessages = document.getElementById('chat');
+
+    sendButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        const userMessage = textArea.value.trim();
+
+        if (userMessage === '') return;
+        sendButton.disabled = true;
+
+
+        const userMsgDiv = document.createElement('div');
+        userMsgDiv.className = 'align-self-start bg-primary text-white rounded p-2 mb-2';
+        userMsgDiv.style.maxWidth = '70%';
+        userMsgDiv.textContent = userMessage;
+        chatMessages.appendChild(userMsgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: new URLSearchParams({ text: userMessage })
+        })
+        .then(response => response.text())
+        .then(data => {
+            const botMsgDiv = document.createElement('div');
+            botMsgDiv.className = 'align-self-end bg-secondary text-dark rounded p-2 mb-2';
+            botMsgDiv.style.maxWidth = '70%';
+            botMsgDiv.innerHTML = data;
+            chatMessages.appendChild(botMsgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            sendButton.disabled = false;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            sendButton.disabled = false;
+        });
+
+        textArea.value = '';
+    });
+
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>

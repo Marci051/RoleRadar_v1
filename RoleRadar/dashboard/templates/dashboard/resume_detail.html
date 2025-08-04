@@ -1,0 +1,136 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load markdownify %}
+
+
+{% block title %}
+    Key Skills
+{% endblock %}
+
+{% block content %}
+    <div class="container-scroller">
+        <!-- partial:partials/_sidebar.html -->
+        {% include 'dashboard/includes/navbar.html' %}
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_navbar.html -->
+            {% include 'dashboard/includes/header.html' %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="container mt-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2>Resume Analysis</h2>
+                            <a href="{% url 'resume_pdf' analysis.id %}" class="btn btn-outline-primary">PDF Download</a>
+                        </div>
+
+                        <div class="card my-3">
+                            <div class="card-header">Suggested job</div>
+                            <div class="card-body">
+                                <h4>{{ analysis.top_job }}</h4>
+                                <p>{{ analysis.job_summary }}</p>
+                                <small class="text-muted">
+                                    analysis date: {{ analysis.created_at|date:"Y-m-d H:i" }}</small>
+                            </div>
+                        </div>
+{##}
+{#                        <div class="card my-3">#}
+{#                            <div class="card-header">predicted job flowcharts</div>#}
+{#                            <div class="card-body">#}
+{#                                <canvas id="jobChart" height="100"></canvas>#}
+{#                                <table class="table table-striped mt-4">#}
+{#                                    <thead>#}
+{#                                    <tr>#}
+{#                                        <th>job</th>#}
+{#                                        <th>percentage (%)</th>#}
+{#                                    </tr>#}
+{#                                    </thead>#}
+{#                                    <tbody>#}
+{#                                    {% for job, score in analysis.predictions.items %}#}
+{#                                        <tr>#}
+{#                                            <td>{{ job }}</td>#}
+{#                                            <td>{{ score|floatformat:2 }}</td>#}
+{#                                        </tr>#}
+{#                                    {% endfor %}#}
+{#                                    </tbody>#}
+{#                                </table>#}
+{#                            </div>#}
+{#                        </div>#}
+
+                        {% if analysis.keywords %}
+                            <div class="card my-3">
+                                <div class="card-header">important keywords</div>
+                                <div class="card-body">
+                                    {% for keyword in analysis.keywords %}
+                                        <span class="badge bg-secondary me-1">{{ keyword }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if analysis.strengths %}
+                            <div class="card my-3">
+                                <div class="card-header">Strengths</div>
+                                <div class="card-body">
+                                    <p>{{ analysis.strengths }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if analysis.weaknesses %}
+                            <div class="card my-3">
+                                <div class="card-header">Weaknesses</div>
+                                <div class="card-body">
+                                    <p>{{ analysis.weaknesses }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="card my-4">
+                            <div class="card-header">Original Resume</div>
+                            <div class="card-body">
+                                <pre style="white-space: pre-wrap;">{{ analysis.original_resume }}</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        const ctx = document.getElementById('jobChart').getContext('2d');
+                        const chart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: {{ analysis.predictions.keys|safe }},
+                                datasets: [{
+                                    label: 'Percentage',
+                                    data: {{ analysis.predictions.values|safe }},
+                                    backgroundColor: 'rgba(13, 110, 253, 0.7)',
+                                    borderColor: 'rgba(13, 110, 253, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        min: 0,
+                                        max: 1,
+                                        ticks: {
+                                            callback: function (value) {
+                                                return (value * 100).toFixed(0) + '%';
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                {% include 'dashboard/includes/footer.html' %}
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+    </div>
+
+{% endblock content %}

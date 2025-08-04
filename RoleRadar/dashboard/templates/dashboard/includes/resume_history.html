@@ -1,0 +1,138 @@
+{% load static %}
+<div class="row">
+    <div class="col-md-9 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-row justify-content-between">
+                    <h4 class="card-title mb-1">Resume Analysis History</h4>
+                    <p class="text-muted mb-1">View your previous resume analysis results</p>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="preview-list dark-scrollbar">
+                            {% for item in analyses %}
+                                <div class="preview-item border-bottom py-3">
+                                    <div class="preview-thumbnail mb-2">
+                                        <div class="preview-icon bg-primary">
+                                            <i class="mdi mdi-file-document"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="preview-item-content">
+                                        <h6 class="preview-subject mb-1">{{ item.top_job }}</h6>
+                                        <p class="text-muted mb-2" style="font-size: 0.85em;">
+                                            {{ item.job_summary|truncatewords:15 }}
+                                        </p>
+                                        <div>
+                                            <p class="text-muted mb-1" style="font-size: 0.8em;">
+                                                {{ item.created_at|date:"j M Y, H:i" }}
+                                            </p>
+                                            <a href="{% url 'resume_detail' id=item.id %}"
+                                               class="text-primary me-sm-3 mb-1 mb-sm-0"
+                                               style="font-size: 0.85em; text-decoration: none;">
+                                                <i class="mdi mdi-eye-outline"></i> View Details
+                                            </a>
+                                            <form action="{% url 'delete_resume_analysis' item.id %}" method="post"
+                                                  style="display: inline;"
+                                                  onsubmit="return confirm('Are you sure you want to delete this analysis? This action cannot be undone.');">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-link text-danger p-0"
+                                                        style="font-size: 0.85em; text-decoration: none; vertical-align: baseline;">
+                                                    <i class="mdi mdi-delete-forever-outline"></i> Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="text-muted mt-4">No analyses yet.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional sidebar -->
+    <div class="col-md-3 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Summary</h4>
+                <p class="text-muted">You have {{ analyses|length }} analyses stored.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% load static %}
+<h3 class="mt-5 mb-5 text-center text-light py-3"
+    style="border-top: 2px solid rgba(255, 255, 255, 0.4);
+           border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+           font-weight: 500;">
+    Visual Resume & Career Insights (Global Trends)
+</h3>
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <img src="{% static 'images/charts/job_experience.jpg' %}" class="card-img-top" alt="Global Job Experience Trends Chart"
+                 height="350px">
+            <div class="card-body">
+                <h6 class="card-title">Global Job Experience Trends</h6>
+                <p class="card-text text-muted" style="font-size: 0.85em;">
+                    Illustrates typical experience level distributions or average years of experience required across various professional fields and industries worldwide.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <img src="{% static 'images/charts/job_salary.jpg' %}" class="card-img-top" alt="Global Salary Benchmarks Chart" height="350px">
+            <div class="card-body">
+                <h6 class="card-title">General Salary Benchmarks</h6>
+                <p class="card-text text-muted" style="font-size: 0.85em;">
+                    Showcases common salary ranges for various roles or industries based on broad market data, providing a general perspective on compensation.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <img src="{% static 'images/charts/job_country.jpg' %}" class="card-img-top" alt="International Job Market Insights Chart" height="350px">
+            <div class="card-body">
+                <h6 class="card-title">International Job Market Overview</h6>
+                <p class="card-text text-muted" style="font-size: 0.85em;">
+                    Provides insights into the global job market, highlighting general trends in demand for specific skills or roles across different countries or regions.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <img src="{% static 'images/charts/qualifications_count.jpg' %}" class="card-img-top" alt="Commonly Required Qualifications Chart"
+                 height="350px">
+            <div class="card-body">
+                <h6 class="card-title">Most In-Demand Qualifications</h6>
+                <p class="card-text text-muted" style="font-size: 0.85em;">
+                    Highlights frequently required qualifications, certifications, or educational backgrounds across various professions on a general market level.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <img src="{% static 'images/charts/worktype_count.jpg' %}" class="card-img-top" alt="Global Work Type Trends Chart"
+                 height="350px">
+            <div class="card-body">
+                <h6 class="card-title">Global Work Type & Employment Trends</h6>
+                <p class="card-text text-muted" style="font-size: 0.85em;">
+                    Illustrates the general distribution and evolving trends of different work engagement models (e.g., full-time, contract, remote) in the current job market.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

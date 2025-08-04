@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+{% load markdownify %}
+
+{% block title %}
+    Road map
+{% endblock %}
+
+{% block content %}
+    <div class="container-scroller">
+        <!-- partial:partials/_sidebar.html -->
+        {% include 'dashboard/includes/navbar.html' %}
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_navbar.html -->
+            {% include 'dashboard/includes/header.html' %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <form method="post" action="{% url 'roadmap' %}" class="bg-dark text-white p-4 rounded">
+                        {% csrf_token %}
+                        <h4 class="mb-3">Enter your desired areas of work</h4>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea required class="form-control text-light" name="description" id="description" rows="3"
+                                      placeholder="Write something about areas of work..."></textarea>
+                        </div>
+
+                        <input type="hidden" name="skills" id="skillsHiddenInput">
+
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </form>
+                    <br>
+                    {% if message %}
+                        <div class="flex-grow overflow-auto mb-3"
+                             style="background-color: #2a2d34; border-radius: 8px; padding: 10px;">
+                            <div class="d-flex flex-column">
+                                <div class="align-self-start bg-primary text-white rounded p-2 mb-2"
+                                     style="max-width: 100%;">
+                                    {{ message|markdownify }}
+                                </div>
+                            </div>
+                        </div>
+                        {% url 'advice' as base_url %}
+                        <a href="{{ base_url }}?context={{ text_message|urlencode }}" class="btn btn-primary">Talk More!</a>
+                    {% endif %}
+
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                {% include 'dashboard/includes/footer.html' %}
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+
+{% endblock %}
+
+
+
+

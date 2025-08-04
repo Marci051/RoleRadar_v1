@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% load markdownify %}
+
+
+{% block title %}
+    Key Skills
+{% endblock %}
+
+{% block content %}
+    <div class="container-scroller">
+        <!-- partial:partials/_sidebar.html -->
+        {% include 'dashboard/includes/navbar.html' %}
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_navbar.html -->
+            {% include 'dashboard/includes/header.html' %}
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <h2>Are you sure you want to log out?</h2>
+                    <br>
+                    <br>
+                    <br>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-danger border-0">Yes, log me out</button>
+                        <br>
+                        <br>
+                        <a href="{% url 'dashboard' %}">Cancel</a>
+                    </form>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                {% include 'dashboard/includes/footer.html' %}
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+    </div>
+
+{% endblock content %}

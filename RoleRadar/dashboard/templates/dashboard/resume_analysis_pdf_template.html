@@ -1,0 +1,156 @@
+{% load markdownify %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Analysis - {{ analysis.user.username }}</title>
+    <style>
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            margin: 20px;
+        }
+        h1, h2, h3, h4 {
+            color: #333333;
+            margin-bottom: 0.5em;
+        }
+        h1 { font-size: 18pt; text-align: center; margin-bottom: 20px; }
+        h2 { font-size: 14pt; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 20px;}
+        h3 { font-size: 12pt; margin-top: 15px;}
+        p { margin-bottom: 10px; }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 9pt;
+        }
+        .card-like {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #ffffff;
+        }
+        .card-header-like {
+            font-weight: bold;
+            font-size: 11pt;
+            color: #444;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .text-muted {
+            color: #6c757d !important;
+            font-size: 0.9em;
+        }
+        .badge {
+            display: inline-block;
+            padding: .35em .65em;
+            font-size: .75em;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .25rem;
+            background-color: #6c757d;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Resume Analysis Report</h1>
+
+    <div class="card-like">
+        <p><strong>User:</strong> {{ analysis.user.username }}</p>
+        <p><strong>Analysis Date:</strong> {{ analysis.created_at|date:"Y-m-d H:i" }}</p>
+    </div>
+
+    <div class="card-like">
+        <div class="card-header-like">Suggested Job</div>
+        <h4>{{ analysis.top_job }}</h4>
+        <p>{{ analysis.job_summary|markdownify|safe }}</p>
+    </div>
+
+    {% if analysis.predicted_jobs %}
+    <div class="card-like">
+        <div class="card-header-like">Predicted Job Probabilities</div>
+        <table>
+            <thead>
+            <tr>
+                <th>Job</th>
+                <th>Probability</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for job, score in analysis.predicted_jobs.items %}
+                <tr>
+                    <td>{{ job }}</td>
+                    <td>{{ score|floatformat:2 }}%</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+
+    {% if analysis.keywords %}
+        <div class="card-like">
+            <div class="card-header-like">Important Keywords</div>
+            <div>
+                {% for keyword in analysis.keywords %}
+                    <span class="badge">{{ keyword }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if analysis.strengths %}
+        <div class="card-like">
+            <div class="card-header-like">Strengths</div>
+            <p>{{ analysis.strengths|markdownify|safe }}</p>
+        </div>
+    {% endif %}
+
+    {% if analysis.weaknesses %}
+        <div class="card-like">
+            <div class="card-header-like">Weaknesses</div>
+            <p>{{ analysis.weaknesses|markdownify|safe }}</p>
+        </div>
+    {% endif %}
+    
+    {% if analysis.suggestion %}
+    <div class="card-like">
+        <div class="card-header-like">AI Suggestions & Roadmap</div>
+        <div>{{ analysis.suggestion|markdownify|safe }}</div>
+    </div>
+    {% endif %}
+
+    <div class="card-like">
+        <div class="card-header-like">Original Resume Text</div>
+        <pre>{{ analysis.original_resume }}</pre>
+    </div>
+
+</body>
+</html>
