@@ -49,8 +49,11 @@ python manage.py runserver
 ```
 RoleRadar/
 │
-├── core/               # Main Django app (models, views, etc.)
-├── media/              # Uploaded resume files
+├── account/            # Handles user authentication, registration, etc.
+├── ai/                 # Handles AI/ML logic and model loading
+├── dashboard/          # User dashboard interface
+├── home/               # Landing
+├── RoleRadar/          # Django project settings (main configuration package)
 ├── static/             # Frontend static files
 ├── templates/          # HTML templates
 ├── requirements.txt    # Python dependencies
